@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{title}}</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      nav {
+        background-color: #333;
+        color: #fff;
+        padding: 10px;
+        overflow: hidden; /* Добавляем этот стиль для правильного выравнивания */
+      }
+      .left {
+        float: left; /* Выравниваем элементы слева */
+      }
+      .right {
+        float: right; /* Выравниваем элементы справа */
+      }
+      ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+      }
+      li {
+        display: inline;
+        margin-right: 20px; /* Изменяем отступ справа */
+      }
+      li:last-child {
+        margin-right: 0; /* Убираем отступ для последнего элемента */
+      }
+      a {
+        color: #fff;
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      footer {
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        padding: 10px;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+    }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <ul class="left">
+        <li>
+            <a href="{% url 'main:index' %}">Главная</a>
+          </li>
+        <li>
+          <a href="{% url 'training:index' %}">Тренировка</a>
+        </li>
+        <li>
+          <a href="#">Статистика</a>
+        </li>
+        <li>
+          <a href="#">Антропометрия</a>
+        </li>
+      </ul>
+      <ul class="right">
+        <li>
+          <a href="#">Авторизация</a>
+        </li>
+      </ul>
+    </nav>
+    <section>
+      <!-- Контент -->
+      <div class="container">
+        <div class="row mt-1">
+          <div class="col-lg-2">
+            <!-- Пустой блок на Ваше усмотрение -->
+          </div>
+          <div class="col-lg-10">
+            <!-- Контент на странице -->
+            <h1 class="mt-5 pt-5"><strong>{{ content }}</strong></h1>
+          </div>
+        </div>
+      </div>
+    </section>
+    {% block footer %}{% endblock footer %}
+    
+  </body>
+</html>
