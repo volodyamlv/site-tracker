@@ -1,0 +1,29 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <h1>Информация о теле</h1>
+    <div class="segment">
+        <p class="segment-title">Количество мышечной массы по сегментам:</p>
+        <ul>
+            <li>Плечи: 15 кг</li>
+            <li>Грудь: 30 кг</li>
+            <li>Бицепс: 10 кг</li>
+            <!-- Добавьте другие сегменты и их массу по аналогии -->
+        </ul>
+    </div>
+    <div class="analysis">
+        <p><strong>Анализ ожирения:</strong> Нормальный вес</p>
+        <p><strong>Анализ состава тела:</strong> 15% жира, 60% мышечной массы, 25% органов и костей</p>
+        <!-- Добавьте другие анализы тела по аналогии -->
+    </div>
+</div>
+{% endblock %}
+{% block footer %}
+    <footer class="py-4 bg-dark">
+        <div class="container">
+            <p class="m-0 text-center text-white">Copyright &copy; Это типа footer, можно будет его удалить</p>
+        </div>
+    </footer>   
+{% endblock footer %}
