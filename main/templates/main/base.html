@@ -62,10 +62,10 @@
           <a href="{% url 'training:index' %}">Тренировка</a>
         </li>
         <li>
-          <a href="#">Статистика</a>
+          <a href="{% url "progress:index" %}">Статистика</a>
         </li>
         <li>
-          <a href="#">Антропометрия</a>
+          <a href="{% url "body:index" %}">Антропометрия</a>
         </li>
       </ul>
       <ul class="right">
@@ -83,7 +83,7 @@
           </div>
           <div class="col-lg-10">
             <!-- Контент на странице -->
-            <h1 class="mt-5 pt-5"><strong>{{ content }}</strong></h1>
+            {% block content %}{% endblock content %}
           </div>
         </div>
       </div>
