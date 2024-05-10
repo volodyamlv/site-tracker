@@ -27,6 +27,7 @@ urlpatterns = [
     path("training/", include("training.urls", namespace="training")),
     path("progress/", include("progress.urls", namespace="progress")),
     path("body/", include("body.urls", namespace="body")),
+    path("food/", include("food.urls", namespace="food")),
 ]
 
 if DEBUG:

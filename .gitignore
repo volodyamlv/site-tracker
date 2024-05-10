@@ -10,3 +10,6 @@ __pycache__/
 #django
 db.sqlite3
 media/
+
+#tokens
+.env

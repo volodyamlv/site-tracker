@@ -14,13 +14,13 @@
         background-color: #333;
         color: #fff;
         padding: 10px;
-        overflow: hidden; /* Добавляем этот стиль для правильного выравнивания */
+        overflow: hidden;
       }
       .left {
-        float: left; /* Выравниваем элементы слева */
+        float: left;
       }
       .right {
-        float: right; /* Выравниваем элементы справа */
+        float: right;
       }
       ul {
         list-style-type: none;
@@ -29,10 +29,10 @@
       }
       li {
         display: inline;
-        margin-right: 20px; /* Изменяем отступ справа */
+        margin-right: 20px;
       }
       li:last-child {
-        margin-right: 0; /* Убираем отступ для последнего элемента */
+        margin-right: 0;
       }
       a {
         color: #fff;
@@ -67,6 +67,9 @@
         <li>
           <a href="{% url "body:index" %}">Антропометрия</a>
         </li>
+        <li>
+          <a href="{% url "food:index" %}">Питание</a>
+        </li>
       </ul>
       <ul class="right">
         <li>
@@ -75,14 +78,11 @@
       </ul>
     </nav>
     <section>
-      <!-- Контент -->
       <div class="container">
         <div class="row mt-1">
           <div class="col-lg-2">
-            <!-- Пустой блок на Ваше усмотрение -->
           </div>
           <div class="col-lg-10">
-            <!-- Контент на странице -->
             {% block content %}{% endblock content %}
           </div>
         </div>
