@@ -69,7 +69,13 @@
         <h2>Дневник питания</h2>
         <div id="cart-items"></div>
     </div>
-
+    
+    <div id="summary" style="margin-top: 20px;">
+        <p id="total-protein" style="display: inline-block; margin-right: 20px; font-weight: bold;">Белки: 0 г</p>
+        <p id="total-fat" style="display: inline-block; margin-right: 20px; font-weight: bold;">Жиры: 0 г</p>
+        <p id="total-carbs" style="display: inline-block; margin-right: 20px; font-weight: bold;">Углеводы: 0 г</p>
+        <p id="total-calories" style="display: inline-block; font-weight: bold;">Калории: 0 ккал</p>
+    </div>
     <script>
         var timeoutId;
 
@@ -166,6 +172,8 @@
             cartItem.appendChild(document.createElement("br"));
             cartItem.appendChild(productNutrients);
             cartItems.appendChild(cartItem);
+            updateSummary();
+
         }
 
         function calculateNutrients(food, weight) {
@@ -181,6 +189,7 @@
             var productNutrients = cartItem.querySelector(".cart-info");
             var nutrients = calculateNutrients(food, weight);
             productNutrients.textContent = nutrients;
+            updateSummary();
         }
 
         function clearFoodList() {
@@ -192,7 +201,28 @@
         document.getElementById("food-search-form").addEventListener("submit", function(event) {
             event.preventDefault();
         });
-        
+        function updateSummary() {
+            var cartItems = document.querySelectorAll(".cart-item");
+            var totalProtein = 0;
+            var totalFat = 0;
+            var totalCarbs = 0;
+            var totalCalories = 0;
+    
+            cartItems.forEach(function(item) {
+                var nutrients = item.querySelector(".cart-info").textContent.split("|");
+    
+                totalProtein += parseFloat(nutrients[0].split(":")[1]);
+                totalFat += parseFloat(nutrients[1].split(":")[1]);
+                totalCarbs += parseFloat(nutrients[2].split(":")[1]);
+                totalCalories += parseFloat(nutrients[3].split(":")[1]);
+            });
+    
+            // Обновление значений в соответствующих элементах
+            document.getElementById("total-protein").textContent = "Белки: " + totalProtein.toFixed(2) + " г";
+            document.getElementById("total-fat").textContent = "Жиры: " + totalFat.toFixed(2) + " г";
+            document.getElementById("total-carbs").textContent = "Углеводы: " + totalCarbs.toFixed(2) + " г";
+            document.getElementById("total-calories").textContent = "Калории: " + totalCalories.toFixed(2) + " ккал";
+        }
     </script>
     
 </body>
