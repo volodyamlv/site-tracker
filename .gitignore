@@ -11,9 +11,5 @@ __pycache__/
 db.sqlite3
 media/
 
-<<<<<<< HEAD
-=======
-#tokens
->>>>>>> api
 #tokens
 .env

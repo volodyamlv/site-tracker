@@ -1,4 +1,5 @@
 from turtle import title
+from django.contrib.auth.decorators import login_required
 from django.contrib import auth, messages
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
@@ -26,7 +27,7 @@ def login(request):
     context = {"title": "Вход", "form": form}
     return render(request, "users/login.html", context)
 
-
+@login_required
 def logout(request):
     auth.logout(request)
     return redirect(reverse("main:index"))
@@ -46,7 +47,7 @@ def signup(request):
     context = {"title": "Регистрация", "form": form}
     return render(request, "users/registration.html", context)
 
-
+@login_required
 def profile(request):
     context = {
         "title": "Профиль",
