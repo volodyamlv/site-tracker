@@ -1,0 +1,228 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block content %}
+<body>
+    <style>
+        #food-container {
+            position: relative;
+        }
+        #food-input {
+            width: 300px;
+        }
+        #food-list {
+            position: absolute;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            max-height: 150px;
+            overflow-y: auto;
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            width: 100%;
+            display: none;
+        }
+        #food-list li {    
+            display: block;
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+        #food-list li:hover {
+            background-color: #ddd;
+        }
+        .product-name {
+            font-weight: bold;
+            font-size: 16px; 
+        }
+        .nutrients {
+            font-size: 14px;
+        }
+        .cart {
+            border: 2px solid #ddd;
+            padding: 10px;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+        .cart-item {
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+        .cart-item:last-child {
+            margin-bottom: 0;
+            border-bottom: none;
+        }
+        .cart-info {
+            font-weight: bold;
+        }
+    </style>
+    <h1>Поиск продуктов</h1>
+    <div id="food-container">
+        <form id="food-search-form">
+            <label for="food-input">Введите название продукта:</label>
+            <input type="search" id="food-input" name="food" required autocomplete="off">
+        </form>
+        <ul id="food-list"></ul>
+    </div>
+
+    <div class="cart">
+        <h2>Дневник питания</h2>
+        <div id="cart-items"></div>
+    </div>
+    
+    <div id="summary" style="margin-top: 20px;">
+        <p id="total-protein" style="display: inline-block; margin-right: 20px; font-weight: bold;">Белки: 0 г</p>
+        <p id="total-fat" style="display: inline-block; margin-right: 20px; font-weight: bold;">Жиры: 0 г</p>
+        <p id="total-carbs" style="display: inline-block; margin-right: 20px; font-weight: bold;">Углеводы: 0 г</p>
+        <p id="total-calories" style="display: inline-block; font-weight: bold;">Калории: 0 ккал</p>
+    </div>
+    <script>
+        var timeoutId;
+
+        document.getElementById("food-input").addEventListener("input", function(event) {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(searchFood, 500); // Задержка в 500 мс после ввода
+        });
+
+        function searchFood() {
+            var foodInput = document.getElementById("food-input").value.trim();
+            if (foodInput !== "") {
+                var xhr = new XMLHttpRequest();
+                var url = window.location.pathname + "search_food/";
+                var data = new FormData();
+                data.append('food_input', foodInput);
+                xhr.open("POST", url, true);
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        var response = JSON.parse(xhr.responseText);
+                        displayFoodOptions(response);
+                    }
+                };
+                xhr.send(data);
+            } else {
+                clearFoodList();
+            }
+        }
+
+        function displayFoodOptions(foodData) {
+            var foodList = document.getElementById("food-list");
+            foodList.innerHTML = "";
+            if (foodData.foods && foodData.foods.length > 0) {
+                var foods = foodData.foods;
+                foods.forEach(function(food) {
+                    var listItem = document.createElement("li");
+                    var listItemText = document.createElement("span");
+                    var listItemNutrients = document.createElement("span");
+
+                    listItemText.textContent = food.description;
+                    listItemText.classList.add("product-name");
+
+                    var nutrients = " | Белки: " + (food.foodNutrients.find(nutrient => nutrient.nutrientName === "Protein")?.value || 0) +
+                                    " | Жиры: " + (food.foodNutrients.find(nutrient => nutrient.nutrientName === "Total lipid (fat)")?.value || 0) +
+                                    " | Углеводы: " + (food.foodNutrients.find(nutrient => nutrient.nutrientName === "Carbohydrate, by difference")?.value || 0) +
+                                    " | Калории: " + (food.foodNutrients.find(nutrient => nutrient.nutrientName === "Energy")?.value || 0);
+                    listItemNutrients.textContent = nutrients;
+                    listItemNutrients.classList.add("nutrients");
+
+                    listItem.addEventListener("click", function() {
+                        selectFood(food);
+                    });
+
+                    listItem.appendChild(listItemText);
+                    listItem.appendChild(listItemNutrients);
+                    foodList.appendChild(listItem);
+                });
+                foodList.style.display = "block";
+            } else {
+                foodList.style.display = "none";
+            }
+        }
+
+        function selectFood(food) {
+            addToCart(food);
+            clearFoodList();
+        }
+
+        function addToCart(food) {
+            var cartItems = document.getElementById("cart-items");
+
+            var cartItem = document.createElement("div");
+            var productName = document.createElement("span");
+            var productWeight = document.createElement("input");
+            var productNutrients = document.createElement("div");
+
+            cartItem.classList.add("cart-item");
+
+            productName.textContent = food.description;
+            productName.classList.add("product-name");
+
+            productWeight.type = "number";
+            productWeight.value = 100;
+            productWeight.addEventListener("input", function() {
+                updateCartItemNutrients(food, this.value);
+            });
+
+            var nutrients = calculateNutrients(food, 100);
+            productNutrients.textContent = nutrients;
+            productNutrients.classList.add("cart-info");
+
+            cartItem.appendChild(productName);
+            cartItem.appendChild(document.createElement("br")); 
+            cartItem.appendChild(productWeight);
+            cartItem.appendChild(document.createElement("br"));
+            cartItem.appendChild(productNutrients);
+            cartItems.appendChild(cartItem);
+            updateSummary();
+
+        }
+
+        function calculateNutrients(food, weight) {
+            var protein = (food.foodNutrients.find(nutrient => nutrient.nutrientName === "Protein")?.value || 0) * weight / 100;
+            var fat = (food.foodNutrients.find(nutrient => nutrient.nutrientName === "Total lipid (fat)")?.value || 0) * weight / 100;
+            var carbs = (food.foodNutrients.find(nutrient => nutrient.nutrientName === "Carbohydrate, by difference")?.value || 0) * weight / 100;
+            var calories = (food.foodNutrients.find(nutrient => nutrient.nutrientName === "Energy")?.value || 0) * weight / 100;
+            return "Белки: " + protein.toFixed(2) + " г | Жиры: " + fat.toFixed(2) + " г | Углеводы: " + carbs.toFixed(2) + " г | Калории: " + calories.toFixed(2);
+        }
+
+        function updateCartItemNutrients(food, weight) {
+            var cartItem = event.target.parentNode;
+            var productNutrients = cartItem.querySelector(".cart-info");
+            var nutrients = calculateNutrients(food, weight);
+            productNutrients.textContent = nutrients;
+            updateSummary();
+        }
+
+        function clearFoodList() {
+            var foodList = document.getElementById("food-list");
+            foodList.innerHTML = "";
+            foodList.style.display = "none";
+            document.getElementById("food-input").value = "";
+        }
+        document.getElementById("food-search-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+        });
+        function updateSummary() {
+            var cartItems = document.querySelectorAll(".cart-item");
+            var totalProtein = 0;
+            var totalFat = 0;
+            var totalCarbs = 0;
+            var totalCalories = 0;
+    
+            cartItems.forEach(function(item) {
+                var nutrients = item.querySelector(".cart-info").textContent.split("|");
+    
+                totalProtein += parseFloat(nutrients[0].split(":")[1]);
+                totalFat += parseFloat(nutrients[1].split(":")[1]);
+                totalCarbs += parseFloat(nutrients[2].split(":")[1]);
+                totalCalories += parseFloat(nutrients[3].split(":")[1]);
+            });
+
+            document.getElementById("total-protein").textContent = "Белки: " + totalProtein.toFixed(2) + " г";
+            document.getElementById("total-fat").textContent = "Жиры: " + totalFat.toFixed(2) + " г";
+            document.getElementById("total-carbs").textContent = "Углеводы: " + totalCarbs.toFixed(2) + " г";
+            document.getElementById("total-calories").textContent = "Калории: " + totalCalories.toFixed(2) + " ккал";
+        }
+    </script>
+    
+</body>
+{% endblock %}

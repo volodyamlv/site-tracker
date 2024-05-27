@@ -3,92 +3,81 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{{title}}</title>
+    <title>{{ title }}</title>
     <style>
       body {
         font-family: Arial, sans-serif;
         margin: 0;
         padding: 0;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
       }
       nav {
         background-color: #333;
         color: #fff;
-        padding: 10px;
-        overflow: hidden; /* Добавляем этот стиль для правильного выравнивания */
+        padding: 10px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
       }
-      .left {
-        float: left; /* Выравниваем элементы слева */
-      }
-      .right {
-        float: right; /* Выравниваем элементы справа */
-      }
-      ul {
+      nav ul {
         list-style-type: none;
         margin: 0;
         padding: 0;
+        display: flex;
       }
-      li {
-        display: inline;
-        margin-right: 20px; /* Изменяем отступ справа */
+      nav li {
+        margin-right: 20px;
       }
-      li:last-child {
-        margin-right: 0; /* Убираем отступ для последнего элемента */
+      nav li:last-child {
+        margin-right: 0;
       }
-      a {
+      nav a {
         color: #fff;
         text-decoration: none;
       }
-      a:hover {
+      nav a:hover {
         text-decoration: underline;
+      }
+      .container {
+        flex: 1;
+        padding: 20px;
       }
       footer {
         background-color: #333;
         color: #fff;
         text-align: center;
         padding: 10px;
-        position: fixed;
+        position: sticky;
         bottom: 0;
         width: 100%;
-    }
+      }
     </style>
   </head>
   <body>
     <nav>
-      <ul class="left">
-        <li>
-            <a href="{% url 'main:index' %}">Главная</a>
-          </li>
-        <li>
-          <a href="{% url 'training:index' %}">Тренировка</a>
-        </li>
-        <li>
-          <a href="{% url "progress:index" %}">Статистика</a>
-        </li>
-        <li>
-          <a href="{% url "body:index" %}">Антропометрия</a>
-        </li>
+      <ul>
+        <li><a href="{% url 'main:index' %}">Главная</a></li>
+        <li><a href="{% url 'training:index' %}">Тренировка</a></li>
+        <li><a href="{% url 'progress:index' %}">Статистика</a></li>
+        <li><a href="{% url 'body:index' %}">Антропометрия</a></li>
+        <li><a href="{% url 'food:index' %}">Питание</a></li>
       </ul>
-      <ul class="right">
-        <li>
-          <a href="#">Авторизация</a>
-        </li>
+      <ul>
+        {% if user.is_authenticated %}
+        <li><a href="{% url 'users:profile' %}">Профиль</a></li>
+        <li><a href="{% url 'users:logout' %}">Выйти</a></li>
+        {% else %}
+          <li><a href="{% url 'users:login' %}">Войти</a></li>
+        {% endif %}
       </ul>
     </nav>
-    <section>
-      <!-- Контент -->
-      <div class="container">
-        <div class="row mt-1">
-          <div class="col-lg-2">
-            <!-- Пустой блок на Ваше усмотрение -->
-          </div>
-          <div class="col-lg-10">
-            <!-- Контент на странице -->
-            {% block content %}{% endblock content %}
-          </div>
-        </div>
-      </div>
-    </section>
-    {% block footer %}{% endblock footer %}
-    
+    <div class="container">
+      {% block content %}{% endblock content %}
+    </div>
+    <footer>
+      {% block footer %}{% endblock footer %}
+    </footer>
   </body>
 </html>
