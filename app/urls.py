@@ -28,6 +28,7 @@ urlpatterns = [
     path("progress/", include("progress.urls", namespace="progress")),
     path("body/", include("body.urls", namespace="body")),
     path("food/", include("food.urls", namespace="food")),
+    path("user/", include("users.urls", namespace="user")),
 ]
 
 if DEBUG:

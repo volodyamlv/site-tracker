@@ -216,8 +216,7 @@
                 totalCarbs += parseFloat(nutrients[2].split(":")[1]);
                 totalCalories += parseFloat(nutrients[3].split(":")[1]);
             });
-    
-            // Обновление значений в соответствующих элементах
+
             document.getElementById("total-protein").textContent = "Белки: " + totalProtein.toFixed(2) + " г";
             document.getElementById("total-fat").textContent = "Жиры: " + totalFat.toFixed(2) + " г";
             document.getElementById("total-carbs").textContent = "Углеводы: " + totalCarbs.toFixed(2) + " г";
