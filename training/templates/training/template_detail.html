@@ -1,0 +1,9 @@
+
+{% block content %}
+  <h1>{{ workout.name }}</h1>
+  <ul>
+    {% for exercise in exercises %}
+      <li><a href="{% url 'exercise_detail' exercise.pk %}">{{ exercise.name }}</a> ({{ exercise.sets }} подходов)</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

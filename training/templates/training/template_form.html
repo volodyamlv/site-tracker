@@ -1,0 +1,102 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/template_form.css' %}">
+{% endblock extra_head %}
+
+{% block content %}
+<div class="template-form-page">
+    <div class="form-container">
+        <form id="templateForm" method="post">
+            {% csrf_token %}
+            {{ template_form.as_p }}
+
+            <fieldset>
+                <legend>Exercises</legend>
+                <div id="exercises">
+                    <div class="exercise">
+                        <label for="exercise_name_0">Exercise Name:</label>
+                        <input type="text" name="exercise_name" id="exercise_name_0">
+                        <label for="exercise_sets_0">Sets:</label>
+                        <input type="number" name="exercise_sets" id="exercise_sets_0">
+                        <span class="remove-exercise">✖</span>
+                    </div>
+                </div>
+                <button type="button" id="add_exercise">Add Exercise</button>
+            </fieldset>
+
+            <button type="submit">Save</button>
+        </form>
+
+        <ul id="errorMessages"></ul>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const addExerciseButton = document.getElementById('add_exercise');
+        const exercisesDiv = document.getElementById('exercises');
+        const form = document.getElementById('templateForm');
+        const errorMessages = document.getElementById('errorMessages');
+
+        let exerciseIndex = 1;
+
+        addExerciseButton.addEventListener('click', function() {
+            const newExerciseDiv = document.createElement('div');
+            newExerciseDiv.classList.add('exercise');
+            newExerciseDiv.innerHTML = `
+                <label for="exercise_name_${exerciseIndex}">Exercise Name:</label>
+                <input type="text" name="exercise_name" id="exercise_name_${exerciseIndex}">
+                <label for="exercise_sets_${exerciseIndex}">Sets:</label>
+                <input type="number" name="exercise_sets" id="exercise_sets_${exerciseIndex}">
+                <span class="remove-exercise">✖</span>
+            `;
+            exercisesDiv.appendChild(newExerciseDiv);
+            exerciseIndex++;
+        });
+
+        exercisesDiv.addEventListener('click', function(event) {
+            if (event.target.classList.contains('remove-exercise')) {
+                event.target.parentElement.remove();
+            }
+        });
+
+        form.addEventListener('submit', function(event) {
+            errorMessages.innerHTML = ''; // Clear previous error messages
+            let errors = [];
+
+            const templateName = document.querySelector('#id_name').value;
+            if (!templateName) {
+                errors.push('Введите название шаблона');
+            }
+
+            const exerciseNames = document.querySelectorAll('input[name="exercise_name"]');
+            const exerciseSets = document.querySelectorAll('input[name="exercise_sets"]');
+            let hasExercise = false;
+
+            exerciseNames.forEach((input, index) => {
+                const setsInput = exerciseSets[index];
+                if (input.value && setsInput.value) {
+                    hasExercise = true;
+                } else if (input.value || setsInput.value) {
+                    errors.push('Заполните все поля');
+                }
+            });
+
+            if (!hasExercise) {
+                errors.push('Добавьте хотя бы одно упражнение');
+            }
+
+            if (errors.length > 0) {
+                event.preventDefault();
+                errors.forEach(error => {
+                    const li = document.createElement('li');
+                    li.textContent = error;
+                    errorMessages.appendChild(li);
+                });
+            }
+        });
+    });
+</script>
+{% endblock content %}

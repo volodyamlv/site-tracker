@@ -1,0 +1,162 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block content %}
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Мои тренировки</title>
+<style>
+  h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+  }
+
+  .new-template-button {
+    display: block;
+    width: 100%;
+    max-width: 200px;
+    margin: 20px auto;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+  }
+
+  .new-template-button:hover {
+    background-color: #45a049;
+  }
+
+  .templates {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-gap: 20px;
+  }
+
+  .template {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    position: relative;
+  }
+
+  .template h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 20px;
+    text-decoration: none;
+    color: black;
+  }
+
+  .template h2:hover {
+    color: #555;
+  }
+
+  .template ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .template li {
+    margin-bottom: 10px;
+    color: #666;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .exercise-name {
+    font-weight: bold;
+    color: #333;
+  }
+
+  .exercise-sets {
+    color: #999;
+  }
+
+  .delete-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+
+  .delete-button:hover {
+    background-color: #e53935;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Мои тренировки</h1>
+  <a href="{% url 'training:template_create' %}" class="new-template-button">Создать новый шаблон тренировки</a>
+  <div class="templates">
+    {% for template in templates %}
+      <div class="template">
+        <a href="{% url 'training:template_detail' template.pk %}" style="text-decoration: none;"><h2>{{ template.name }}</h2></a>
+        <button class="delete-button" onclick="deleteTemplate('{{ template.pk }}')">Удалить</button>
+        <ul>
+          {% for exercise in template.exercise_set.all %}
+            <li>
+              <span class="exercise-name">{{ exercise.name }}</span>
+              <span class="exercise-sets" data-sets="{{ exercise.sets }}"></span>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // Function to handle the declension of "подход"
+    function getSetsText(sets) {
+      if (sets % 10 === 1 && sets % 100 !== 11) {
+        return sets + ' подход';
+      } else if ([2, 3, 4].includes(sets % 10) && ![12, 13, 14].includes(sets % 100)) {
+        return sets + ' подхода';
+      } else {
+        return sets + ' подходов';
+      }
+    }
+
+    // Apply declension to each exercise sets element
+    document.querySelectorAll('.exercise-sets').forEach(function(element) {
+      const sets = parseInt(element.getAttribute('data-sets'));
+      element.textContent = getSetsText(sets);
+    });
+
+    // Function to delete template
+    window.deleteTemplate = function(templateId) {
+      if (confirm('Вы уверены, что хотите удалить этот шаблон?')) {
+        fetch(`{% url 'training:template_delete' pk=0 %}`.replace('0', templateId), {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Content-Type': 'application/json',
+          },
+        }).then(response => {
+          if (response.ok) {
+            location.reload();
+          } else {
+            alert('Ошибка при удалении шаблона.');
+          }
+        });
+      }
+    };
+  });
+</script>
+</body>
+{% endblock content %}
