@@ -104,7 +104,7 @@
   <div class="templates">
     {% for template in templates %}
       <div class="template">
-        <a href="{% url 'training:template_detail' template.pk %}" style="text-decoration: none;"><h2>{{ template.name }}</h2></a>
+        <a href="{% url 'training:exercise_form' template.pk %}" style="text-decoration: none;"><h2>{{ template.name }}</h2></a>
         <button class="delete-button" onclick="deleteTemplate('{{ template.pk }}')">Удалить</button>
         <ul>
           {% for exercise in template.exercise_set.all %}

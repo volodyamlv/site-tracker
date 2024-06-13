@@ -44,7 +44,7 @@ INSTALLED_APPS = [
 
     'main',
     'training',
-    'progress',
+    'history',
     'body',
     'food',
     'users',
