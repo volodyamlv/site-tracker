@@ -1,0 +1,90 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block content %}
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>История тренировок</title>
+<style>
+  h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+  }
+
+  .history-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-gap: 20px;
+  }
+
+  .history-item {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    position: relative;
+  }
+
+  .history-item h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 20px;
+    text-decoration: none;
+    color: black;
+  }
+
+  .history-item h2:hover {
+    color: #555;
+  }
+
+  .history-item ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .history-item li {
+    margin-bottom: 10px;
+    color: #666;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .exercise-name {
+    font-weight: bold;
+    color: #333;
+  }
+
+  .exercise-sets {
+    color: #999;
+  }
+</style>
+</head>
+
+<body>
+<div class="container">
+  <h1>История тренировок</h1>
+  <div class="history-container">
+    {% for date, templates in grouped_data.items %}
+      <div class="date-section">
+        <h2>{{ date }}</h2>
+        {% for template_name, exercises in templates.items %}
+          <div class="history-item">
+            <a href="{% url 'history:detail' template_name date %}" style="text-decoration: none;"><h3>{{ template_name }}</h3></a>
+            <ul>
+              {% for exercise_name, sets in exercises.items %}
+                <li>
+                  <span class="exercise-name">{{ exercise_name }}</span>
+                  <span class="exercise-sets">{{ sets }} подходов</span>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endfor %}
+      </div>
+    {% endfor %}
+  </div>
+</div>
+</body>
+{% endblock content %}

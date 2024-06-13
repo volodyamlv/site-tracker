@@ -1,0 +1,72 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block content %}
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Детали тренировки</title>
+<style>
+  h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+  }
+
+  .workout-details {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  .workout-details h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 20px;
+    text-decoration: none;
+    color: black;
+  }
+
+  .workout-details ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .workout-details li {
+    margin-bottom: 10px;
+    color: #666;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .exercise-name {
+    font-weight: bold;
+    color: #333;
+  }
+
+  .exercise-sets {
+    color: #999;
+  }
+</style>
+</head>
+
+<body>
+<div class="container">
+  <h1>Детали тренировки</h1>
+  <div class="workout-details">
+    {% for exercise_name, workouts in grouped_data.items %}
+      <h2>{{ exercise_name }}</h2>
+      <ul>
+        {% for workout in workouts %}
+          <li>
+            <span class="exercise-sets">Вес: {{ workout.weight }} кг, Повторений: {{ workout.amount }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endfor %}
+  </div>
+</div>
+</body>
+{% endblock content %}
