@@ -4,7 +4,7 @@ from .forms import TemplateForm
 from django.urls import reverse
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
-from history.forms import WorkoutHistoryForm
+from history.models import WorkoutHistory
 def index(request):
     context = {"title": "Тренировки", "content": "Тут будут тренировки"}
     return render(request, "training/index.html", context)
@@ -74,29 +74,27 @@ def template_delete(request, pk):
 def exercise_form(request, pk):
     template = get_object_or_404(Template, pk=pk)
     exercises = template.exercise_set.all()  # Получаем все упражнения для данного шаблона
-    
+
+    exercises_with_sets = [(exercise, range(exercise.sets)) for exercise in exercises]
+
     if request.method == 'POST':
-        forms = []
         for exercise in exercises:
-            form = WorkoutHistoryForm(request.POST, prefix=f'exercise_{exercise.pk}')
-            forms.append(form)
-        
-        if all(form.is_valid() for form in forms):
-            for form in forms:
-                workout_history = form.save(commit=False)
-                workout_history.user = request.user
-                workout_history.template_name = template.name
-                workout_history.exercise_name = exercises.get(pk=int(form.prefix.split('_')[1])).name
-                workout_history.save()
-            return redirect("training:template_list")  # Перенаправление на страницу успешного сохранения
-    else:
-        forms = [WorkoutHistoryForm(prefix=f'exercise_{exercise.pk}') for exercise in exercises]
-    
-    exercise_forms = zip(exercises, forms)  # Связываем упражнения с соответствующими формами
-    
+            for i in range(exercise.sets):
+                weight = request.POST.get(f'weight_{exercise.pk}_{i}')
+                amount = request.POST.get(f'amount_{exercise.pk}_{i}')
+                if weight and amount:
+                    WorkoutHistory.objects.create(
+                        user=request.user,
+                        template_name=template.name,
+                        exercise_name=exercise.name,
+                        weight=weight,
+                        amount=amount
+                    )
+        return redirect("training:template_list")  # Перенаправление на страницу успешного сохранения
+
     context = {
         'template': template,
-        'exercise_forms': exercise_forms,
+        'exercises_with_sets': exercises_with_sets,  # Передаем список кортежей
     }
-    
+
     return render(request, 'training/exercise_form.html', context)
