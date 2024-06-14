@@ -14,9 +14,16 @@
   }
 
   .history-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    grid-gap: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Разделяет плитки */
+  }
+
+  .date-section {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
 
   .history-item {
@@ -24,24 +31,24 @@
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    position: relative;
+    margin-bottom: 10px;
   }
 
-  .history-item h2 {
+  .history-item h3 {
     margin-top: 0;
     margin-bottom: 10px;
     font-size: 20px;
-    text-decoration: none;
-    color: black;
+    color: #007bff; /* Цвет заголовка шаблона */
   }
 
-  .history-item h2:hover {
-    color: #555;
+  .history-item h3:hover {
+    color: #0056b3;
   }
 
   .history-item ul {
     list-style: none;
     padding: 0;
+    margin: 0;
   }
 
   .history-item li {
@@ -76,7 +83,7 @@
               {% for exercise_name, sets in exercises.items %}
                 <li>
                   <span class="exercise-name">{{ exercise_name }}</span>
-                  <span class="exercise-sets">{{ sets }} подходов</span>
+                  <span class="exercise-sets" data-sets="{{ sets }}">{{ sets }} подходов</span>
                 </li>
               {% endfor %}
             </ul>
@@ -86,5 +93,27 @@
     {% endfor %}
   </div>
 </div>
+
+<script>
+  // JavaScript для изменения формы слова "подход" в зависимости от числа
+  document.addEventListener('DOMContentLoaded', function() {
+    const exerciseSetsElements = document.querySelectorAll('.exercise-sets');
+    exerciseSetsElements.forEach(element => {
+      const sets = parseInt(element.getAttribute('data-sets'));
+      element.textContent = getSetsText(sets);
+    });
+
+    function getSetsText(sets) {
+      if (sets % 10 === 1 && sets % 100 !== 11) {
+        return sets + ' подход';
+      } else if ([2, 3, 4].includes(sets % 10) && ![12, 13, 14].includes(sets % 100)) {
+        return sets + ' подхода';
+      } else {
+        return sets + ' подходов';
+      }
+    }
+  });
+</script>
+
 </body>
 {% endblock content %}

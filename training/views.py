@@ -42,7 +42,7 @@ def template_create(request):
             return redirect("training:template_list")
         else:
             if not template_form.is_valid():
-                errors.append("Template name is required.")
+                errors.append("Введите название шаблона")
 
     else:
         template_form = TemplateForm()

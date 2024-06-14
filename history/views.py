@@ -4,7 +4,7 @@ from history.models import WorkoutHistory
 
 # Create your views here.
 def history_list(request):
-    history_data = WorkoutHistory.objects.filter(user=request.user).order_by('date_created', 'template_name', 'exercise_name')
+    history_data = WorkoutHistory.objects.filter(user=request.user).order_by('-date_created', 'template_name', 'exercise_name')
     grouped_data = {}
     
     for item in history_data:

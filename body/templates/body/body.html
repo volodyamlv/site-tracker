@@ -1,0 +1,181 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block content %}
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Мои измерения</title>
+<style>
+  h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+  }
+
+  .measurements {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-gap: 20px;
+  }
+
+  .measurement {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    position: relative;
+  }
+
+  .measurement h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 20px;
+    text-decoration: none;
+    color: black;
+  }
+
+  .measurement ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .measurement li {
+    margin-bottom: 10px;
+    color: #666;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .body-part {
+    font-weight: bold;
+    color: #333;
+  }
+
+  .measurement-value {
+    color: #999;
+  }
+
+  form {
+    margin-top: 20px;
+    background: #fff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 0 auto 30px auto;
+  }
+
+  .form-group {
+    margin-bottom: 10px;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+  }
+
+  .form-group input {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  button[type="submit"] {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  button[type="submit"]:hover {
+    background-color: #45a049;
+  }
+</style>
+</head>
+
+<body>
+<div class="container">
+  <h1>Мои измерения</h1>
+
+  <form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="id_forearm">Предплечье (см):</label>
+      {{ form.forearm }}
+    </div>
+    <div class="form-group">
+      <label for="id_arm">Рука (см):</label>
+      {{ form.arm }}
+    </div>
+    <div class="form-group">
+      <label for="id_chest">Грудь (см):</label>
+      {{ form.chest }}
+    </div>
+    <div class="form-group">
+      <label for="id_waist">Талия (см):</label>
+      {{ form.waist }}
+    </div>
+    <div class="form-group">
+      <label for="id_hips">Бедро (см):</label>
+      {{ form.hips }}
+    </div>
+    <div class="form-group">
+      <label for="id_pelvis">Таз (см):</label>
+      {{ form.pelvis }}
+    </div>
+    <div class="form-group">
+      <label for="id_weight">Вес (кг):</label>
+      {{ form.weight }}
+    </div>
+    <button type="submit">Добавить измерения</button>
+  </form>
+
+  <div class="measurements">
+    {% for measurement in body_data %}
+      <div class="measurement">
+        <h2>{{ measurement.date_created }}</h2>
+        <ul>
+          <li>
+            <span class="body-part">Предплечье:</span>
+            <span class="measurement-value">{{ measurement.forearm }} см</span>
+          </li>
+          <li>
+            <span class="body-part">Рука:</span>
+            <span class="measurement-value">{{ measurement.arm }} см</span>
+          </li>
+          <li>
+            <span class="body-part">Грудь:</span>
+            <span class="measurement-value">{{ measurement.chest }} см</span>
+          </li>
+          <li>
+            <span class="body-part">Талия:</span>
+            <span class="measurement-value">{{ measurement.waist }} см</span>
+          </li>
+          <li>
+            <span class="body-part">Бедра:</span>
+            <span class="measurement-value">{{ measurement.hips }} см</span>
+          </li>
+          <li>
+            <span class="body-part">Таз:</span>
+            <span class="measurement-value">{{ measurement.pelvis }} см</span>
+          </li>
+          <li>
+            <span class="body-part">Вес:</span>
+            <span class="measurement-value">{{ measurement.weight }} кг</span>
+          </li>
+        </ul>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+</body>
+{% endblock content %}

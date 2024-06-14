@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}My Site{% endblock title %}</title>
-    {% load static %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     {% block extra_head %}{% endblock extra_head %}
 </head>
@@ -15,7 +14,7 @@
             <li><a href="{% url 'main:index' %}">Главная</a></li>
             <li><a href="{% url 'training:template_list' %}">Тренировка</a></li>
             <li><a href="{% url 'history:history_list' %}">История</a></li>
-            <li><a href="{% url 'body:index' %}">Антропометрия</a></li>
+            <li><a href="{% url 'body:body_view' %}">Антропометрия</a></li>
             <li><a href="{% url 'food:index' %}">Питание</a></li>
         </ul>
         <ul class="nav-right">

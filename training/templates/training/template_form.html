@@ -13,20 +13,20 @@
             {{ template_form.as_p }}
 
             <fieldset>
-                <legend>Exercises</legend>
+                <legend>Упражнения</legend>
                 <div id="exercises">
                     <div class="exercise">
-                        <label for="exercise_name_0">Exercise Name:</label>
+                        <label for="exercise_name_0">Название упражнения:</label>
                         <input type="text" name="exercise_name" id="exercise_name_0">
-                        <label for="exercise_sets_0">Sets:</label>
+                        <label for="exercise_sets_0">Количество подходов:</label>
                         <input type="number" name="exercise_sets" id="exercise_sets_0">
                         <span class="remove-exercise">✖</span>
                     </div>
                 </div>
-                <button type="button" id="add_exercise">Add Exercise</button>
+                <button type="button" id="add_exercise">Добавить упражнение</button>
             </fieldset>
 
-            <button type="submit">Save</button>
+            <button type="submit">Сохранить</button>
         </form>
 
         <ul id="errorMessages"></ul>

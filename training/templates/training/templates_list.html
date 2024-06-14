@@ -121,7 +121,6 @@
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-    // Function to handle the declension of "подход"
     function getSetsText(sets) {
       if (sets % 10 === 1 && sets % 100 !== 11) {
         return sets + ' подход';
@@ -132,7 +131,6 @@
       }
     }
 
-    // Apply declension to each exercise sets element
     document.querySelectorAll('.exercise-sets').forEach(function(element) {
       const sets = parseInt(element.getAttribute('data-sets'));
       element.textContent = getSetsText(sets);

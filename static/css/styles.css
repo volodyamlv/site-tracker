@@ -1,5 +1,12 @@
 /* styles.css */
 
+/* Reset для стандартных отступов и полей */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
     font-family: 'Roboto', sans-serif;
     background-color: #f4f4f9;
@@ -11,7 +18,7 @@ body {
 }
 
 nav {
-    background-color: #6c757d; /* серый цвет */
+    background-color: #6c757d;
     padding: 10px 20px;
     display: flex;
     justify-content: space-between;
@@ -46,7 +53,7 @@ nav ul li a {
 }
 
 nav ul li a:hover {
-    background-color: #5a6268; /* немного темнее серый для hover эффекта */
+    background-color: #5a6268;
 }
 
 .container {
@@ -65,4 +72,65 @@ nav ul li a:hover {
 
 .exercise {
     margin-bottom: 10px;
+}
+
+/* Стили для истории тренировок */
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+.history-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.date-section {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.history-item {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 10px;
+}
+
+.history-item h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 20px;
+    color: #007bff; /* Цвет заголовка шаблона */
+}
+
+.history-item h3:hover {
+    color: #0056b3;
+}
+
+.history-item ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.history-item li {
+    margin-bottom: 10px;
+    color: #666;
+    display: flex;
+    justify-content: space-between;
+}
+
+.exercise-name {
+    font-weight: bold;
+    color: #333;
+}
+
+.exercise-sets {
+    color: #999;
 }
